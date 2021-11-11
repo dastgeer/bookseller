@@ -1,0 +1,67 @@
+1) localhost:9080/api/bookserller/v1/addBooks
+post---
+[
+{
+"name":"five point",
+"description":"nobel",
+"author":"chetan bhagat",
+"type":"fiction",
+"price":300,
+"isbn":"ch001"
+},  {
+"name":"got",
+"description":"nobel",
+"author":"dastgeer",
+"type":"fiction",
+"price":500,
+"isbn":"gt001"
+}
+]
+
+********************************
+localhost:9080/api/bookserller/v1/getAllBooks
+GET
+****************************************
+localhost:9080/api/bookserller/v1/updateBook
+PUT
+[
+{"id":1,
+"name":"five point",
+"description":"nobel",
+"author":"dastgeertest",
+"type":"fiction",
+"price":300,
+"isbn":"ch001"
+}
+]
+
+**************************************
+localhost:9080/api/bookserller/v1/deleteBook/five point
+DELETE
+
+****************************************
+localhost:9080/api/bookserller/checkout/v1/checkout
+POST
+{
+"books":[
+{
+"id": 1,
+"name": "five point",
+"description": "nobel",
+"author": "chetan bhagat",
+"type": "fiction",
+"price": 300.0,
+"isbn": "ch001"
+},
+{
+"id": 2,
+"name": "got",
+"description": "nobel",
+"author": "dastgeer",
+"type": "fiction",
+"price": 500.0,
+"isbn": "gt001"
+}
+],
+"promotionCode":"PROMO20OFF"
+}
