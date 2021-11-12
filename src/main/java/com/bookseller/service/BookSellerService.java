@@ -17,6 +17,11 @@ public class BookSellerService {
     @Autowired
     private BookRepository bookRepository;
 
+    /**
+     * it will add & update the book in database
+     * @param books
+     * @return
+     */
     @Transactional
     public List<Book> addBook(List<Book> books) {
         for (Book book : books){
@@ -26,15 +31,20 @@ public class BookSellerService {
     }
 
 
+    /**
+     * it will return all books
+     * @return
+     */
     public List<Book> getAllBooks() {
         return (List<Book>)bookRepository.findAll();
     }
 
-//
-//    public List<Book> updateBooks(List<Book> book){
-//
-//    }
 
+    /**
+     * it will delete the book by bookName,because book id primary key & book name is unique
+     * @param bookName
+     * @return
+     */
     @Transactional
     public ResponseMessage deleteBookByName(String bookName){
         Book book= bookRepository.findByName(bookName);
