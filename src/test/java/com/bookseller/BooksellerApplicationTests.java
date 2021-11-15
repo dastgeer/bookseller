@@ -119,7 +119,6 @@ class BooksellerApplicationTests {
 				.andExpect(status().is2xxSuccessful())
 				.andReturn();
 		ResponseMessage testReturnResult = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseMessage>() {});
-		System.out.println("testReturnResult--"+testReturnResult);
 		assertEquals("matched result","book deleted from db with book name "+"five point", testReturnResult.getMessage());
 	}
 
