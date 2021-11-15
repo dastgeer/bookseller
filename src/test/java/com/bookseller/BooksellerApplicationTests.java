@@ -23,6 +23,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,30 +70,48 @@ class BooksellerApplicationTests {
 
 	@Test
 	void getAllBookTest() throws Exception {
-//		Book book1= Book.builder().id(null).author("chetan bhagat").description("nobel").name("five point").price(300).isbn("ch001").type("fiction").build();
-//		Book book2= Book.builder().id(null).author("dastgeer").description("nobel").name("got").price(500).isbn("gt001").type("fiction").build();
-//
-//		//given
-//		List<Book> books = new ArrayList<>();
-//		books.add(book1);
-//		books.add(book2);
 
 		Book book3= Book.builder().id(Long.valueOf(1)).author("chetan bhagat").description("nobel").name("five point").price(300).isbn("ch001").type("fiction").build();
 		Book book4= Book.builder().id(Long.valueOf(2)).author("dastgeer").description("nobel").name("got").price(500).isbn("gt001").type("fiction").build();
 		List<Book> books2 = new ArrayList<>();
 		books2.add(book3);
 		books2.add(book4);
-		//String jsondata= objectMapper.writeValueAsString(books);
+
 		when(bookSellerService.getAllBooks()).thenReturn(books2);
 //		//when
 		MvcResult result = mockMvc.perform(get("/api/bookserller/v1/getAllBooks").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful())
 		.andReturn();
-		System.out.println("printing result..."+result.getResponse().getContentAsString());
 		List<Book> books = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Book>>() {});
 		assertEquals("size of returned data",2, books.size());
 
 	}
 
+	@Test
+	void updateBookTest() throws Exception {
+		//Book book1= Book.builder().id(Long.valueOf(1)).author("chetan bhagat").description("nobel").name("five point").price(300).isbn("ch001").type("fiction").build();
+		Book book2= Book.builder().id(Long.valueOf(2)).author("dastgeer update").description("nobel").name("got").price(500).isbn("gt001").type("fiction").build();
+
+//		//given
+		List<Book> inputbookList = new ArrayList<>();
+		//books.add(book1);
+		inputbookList.add(book2);
+
+		//Book book3= Book.builder().id(Long.valueOf(1)).author("chetan bhagat").description("nobel").name("five point").price(300).isbn("ch001").type("fiction").build();
+		Book book4= Book.builder().id(Long.valueOf(2)).author("dastgeer update").description("nobel").name("got").price(500).isbn("gt001").type("fiction").build();
+		List<Book> returnList = new ArrayList<>();
+		//books2.add(book3);
+		returnList.add(book4);
+		String jsondata= objectMapper.writeValueAsString(inputbookList);
+		when(bookSellerService.addBook(inputbookList)).thenReturn(returnList);
+//		//when
+		MvcResult result = mockMvc.perform(put("/api/bookserller/v1/updateBook").content(jsondata).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is2xxSuccessful())
+				.andReturn();
+		List<Book> testReturnResult = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Book>>() {});
+		assertEquals("size of returned data",1, testReturnResult.size());
+		assertEquals(" value of after update book to db",book2.getAuthor(),testReturnResult.get(0).getAuthor());
+
+	}
 
 }

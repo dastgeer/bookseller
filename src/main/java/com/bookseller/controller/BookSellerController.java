@@ -32,9 +32,9 @@ public class BookSellerController {
     }
 
     @PutMapping(path = "/updateBook")
-    public ResponseEntity<?> updateBook(@RequestBody List<Book> book){
+    public ResponseEntity<?> updateBook(@RequestBody List<Book> books){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(bookSellerService.addBook(book));
+            return ResponseEntity.status(HttpStatus.OK).body(bookSellerService.addBook(books));
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
