@@ -3,6 +3,7 @@ package com.bookseller;
 import com.bookseller.controller.BookSellerController;
 import com.bookseller.entity.Book;
 import com.bookseller.service.BookSellerService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,8 +59,12 @@ class BooksellerApplicationTests {
 		String jsondata= objectMapper.writeValueAsString(books);
 		when(bookSellerService.addBook(books)).thenReturn(books2);
 		//when
-		mockMvc.perform(post("/api/bookserller/v1/addBooks").content(jsondata).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated());
+		MvcResult result = mockMvc.perform(post("/api/bookserller/v1/addBooks").content(jsondata).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
+				.andReturn();
+		List<Book> testReturnResult = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Book>>() {});
+		assertEquals("size of returned data",2, testReturnResult.size());
+		assertEquals("id value of after save book to db",Long.valueOf(1),testReturnResult.get(0).getId());
 	}
 
 	@Test
@@ -78,8 +85,13 @@ class BooksellerApplicationTests {
 		//String jsondata= objectMapper.writeValueAsString(books);
 		when(bookSellerService.getAllBooks()).thenReturn(books2);
 //		//when
-		mockMvc.perform(get("/api/bookserller/v1/getAllBooks").contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().is2xxSuccessful());
+		MvcResult result = mockMvc.perform(get("/api/bookserller/v1/getAllBooks").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is2xxSuccessful())
+		.andReturn();
+		System.out.println("printing result..."+result.getResponse().getContentAsString());
+		List<Book> books = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Book>>() {});
+		assertEquals("size of returned data",2, books.size());
+
 	}
 
 
