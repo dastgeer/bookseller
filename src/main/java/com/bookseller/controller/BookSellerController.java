@@ -41,7 +41,7 @@ public class BookSellerController {
     }
 
     @DeleteMapping(path = "/deleteBook/{bookName}")
-    public ResponseEntity<?> deleteBookById(@PathVariable String bookName){
+    public ResponseEntity<?> deleteBookByName(@PathVariable String bookName){
         try {
             if(StringUtils.isEmpty(bookName)){
                 throw new RuntimeException("bookName should not be empty or null");

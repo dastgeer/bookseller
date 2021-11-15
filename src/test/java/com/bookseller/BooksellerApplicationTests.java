@@ -1,6 +1,7 @@
 package com.bookseller;
 
 import com.bookseller.controller.BookSellerController;
+import com.bookseller.dto.ResponseMessage;
 import com.bookseller.entity.Book;
 import com.bookseller.service.BookSellerService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,10 +24,8 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,18 +88,14 @@ class BooksellerApplicationTests {
 
 	@Test
 	void updateBookTest() throws Exception {
-		//Book book1= Book.builder().id(Long.valueOf(1)).author("chetan bhagat").description("nobel").name("five point").price(300).isbn("ch001").type("fiction").build();
 		Book book2= Book.builder().id(Long.valueOf(2)).author("dastgeer update").description("nobel").name("got").price(500).isbn("gt001").type("fiction").build();
 
 //		//given
 		List<Book> inputbookList = new ArrayList<>();
-		//books.add(book1);
 		inputbookList.add(book2);
 
-		//Book book3= Book.builder().id(Long.valueOf(1)).author("chetan bhagat").description("nobel").name("five point").price(300).isbn("ch001").type("fiction").build();
 		Book book4= Book.builder().id(Long.valueOf(2)).author("dastgeer update").description("nobel").name("got").price(500).isbn("gt001").type("fiction").build();
 		List<Book> returnList = new ArrayList<>();
-		//books2.add(book3);
 		returnList.add(book4);
 		String jsondata= objectMapper.writeValueAsString(inputbookList);
 		when(bookSellerService.addBook(inputbookList)).thenReturn(returnList);
@@ -114,4 +109,28 @@ class BooksellerApplicationTests {
 
 	}
 
+	@Test
+	void deleteBookByNameTestRecordFound() throws Exception {
+
+		ResponseMessage responseMessage= ResponseMessage.builder().message("book deleted from db with book name "+"five point").status(200).build();
+		when(bookSellerService.deleteBookByName("five point")).thenReturn(responseMessage);
+//		//when
+		MvcResult result = mockMvc.perform(delete("/api/bookserller/v1/deleteBook/five point").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is2xxSuccessful())
+				.andReturn();
+		ResponseMessage testReturnResult = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseMessage>() {});
+		System.out.println("testReturnResult--"+testReturnResult);
+		assertEquals("matched result","book deleted from db with book name "+"five point", testReturnResult.getMessage());
+	}
+
+	@Test
+	void deleteBookByNameTestRecordNotFound() throws Exception {
+		ResponseMessage responseMessage1= ResponseMessage.builder().message("book doesn't exist in db with book name "+"hello").status(204).build();
+		when(bookSellerService.deleteBookByName("hello")).thenReturn(responseMessage1);
+//		//when
+		MvcResult result1 = mockMvc.perform(delete("/api/bookserller/v1/deleteBook/hello").contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+		ResponseMessage testReturnResult1 = objectMapper.readValue(result1.getResponse().getContentAsString(), new TypeReference<ResponseMessage>() {});
+		assertEquals("matched result","book doesn't exist in db with book name "+"hello", testReturnResult1.getMessage());
+	}
 }
