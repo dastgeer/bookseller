@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,10 +25,12 @@ public class BookSellerService {
      */
     @Transactional
     public List<Book> addBook(List<Book> books) {
+        List<Book> bookList = new ArrayList<>();
         for (Book book : books){
-            bookRepository.save(book);
+           Book addedBook= bookRepository.save(book);
+            bookList.add(addedBook);
         }
-        return  books;
+        return bookList;
     }
 
 
