@@ -4,7 +4,6 @@ import com.bookseller.dto.ResponseMessage;
 import com.bookseller.entity.Book;
 import com.bookseller.repository.BookRepository;
 import com.bookseller.service.BookSellerService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,9 +24,6 @@ public class BookSellerServiceTests {
 
     @InjectMocks
     private BookSellerService bookSellerService;
-
-
-    ObjectMapper objectMapper = new ObjectMapper();
 
 
     @Test
