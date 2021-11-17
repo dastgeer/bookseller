@@ -47,8 +47,6 @@ public class OrderServiceTests {
 
         OrderReview orderReview = OrderReview.builder().skus(skuList).orderDiscount(144.0).ordersubTotal(576.0).orderTotal(800.0)
                 .totalItemDiscounts(80.0).build();
-       // when(bookRepository.existsById(book.getId())).thenReturn(true);
-       // when( bookRepository.existsById(Long.valueOf(1))).thenReturn(true);
         OrderReview testOrderReview= orderService.computeOrder(orderInput);
         assertEquals("size sku list",0, testOrderReview.getSkus().size());
     }
