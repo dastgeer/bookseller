@@ -63,17 +63,11 @@ public class OrderServiceTests {
 
         Order orderInput = Order.builder().books(bookList).promotionCode("PROMO20OFF").build();
 
-        List<Sku> skuList = new ArrayList<>();
-        Sku sku1 = Sku.builder().itemName("five point").markPrice(300.0).discount(30.0).listPrice(270.0).promotionApplied("10.0% off").build();
-        Sku sku2 = Sku.builder().itemName("got").markPrice(500.0).discount(50.0).listPrice(450.0).promotionApplied("10.0% off").build();
-        skuList.add(sku1);
-        skuList.add(sku2);
-
-        OrderReview orderReview = OrderReview.builder().skus(skuList).orderDiscount(144.0).ordersubTotal(576.0).orderTotal(800.0)
-                .totalItemDiscounts(80.0).build();
-        // when(bookRepository.existsById(book.getId())).thenReturn(true);
-        // when( bookRepository.existsById(Long.valueOf(1))).thenReturn(true);
+        when(bookRepository.existsById(book.getId())).thenReturn(true);
+        when(bookRepository.existsById(book2.getId())).thenReturn(true);
         OrderReview testOrderReview= orderService.computeOrder(orderInput);
-        System.out.println("test order review-->"+testOrderReview);
+        assertEquals("size sku list",2, testOrderReview.getSkus().size());
+        assertEquals("orderdiscount",String.valueOf(144.0), String.valueOf(testOrderReview.getOrderDiscount()));
+        assertEquals("order sub total",String.valueOf(576.0), String.valueOf(testOrderReview.getOrdersubTotal()));
     }
 }
